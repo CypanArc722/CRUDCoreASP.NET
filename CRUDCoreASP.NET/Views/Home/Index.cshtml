@@ -1,0 +1,87 @@
+﻿@model Status
+@{
+    ViewData["Title"] = "User Management";
+}
+<link href="~/css/viewdesign.css" rel="stylesheet" />
+<script src="~/js/viewscript.js"></script>
+<script src="~/js/sweetalert2.min.js"></script>
+<link href="~/css/sweetalert2.min.css" rel="stylesheet" />
+
+<div class="table-container">
+    <div class="table-header-actions">
+        <h2>User Management Directory</h2>
+        <button class="btn btn-primary" onclick="openModal(false)">+ Create New User</button>
+    </div>
+    <hr class="divider" />
+    <div class="responsive-wrapper">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Middle Name</th>
+                    <th>Last Name</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model?.User != null && Model.User.Any())
+                {
+                    @foreach (var user in Model.User)
+                    {
+                        <tr class="table-row">
+                            <td><strong>#@user.Id</strong></td>
+                            <td>@user.FirstName</td>
+                            <td>@(string.IsNullOrEmpty(user.MiddleName) ? "-" : user.MiddleName)</td>
+                            <td>@user.LastName</td>
+                            <td class="text-center">
+                                <button class="btn btn-edit" onclick="openModal(true, @user.Id, '@user.FirstName', '@user.MiddleName', '@user.LastName')">Edit</button>
+                                <button class="btn btn-delete" onclick="deleteUser(@user.Id)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr id="emptyRow">
+                        <td colspan="5" class="empty-state">No active records found. Click create to add data.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="userModal" class="modal-backdrop" style="display: none;">
+    <div class="form-container animate-fade-in">
+        <div class="form-header">
+            <h2 id="modalTitle">Register New Account</h2>
+            <p id="modalDescription">Please fill out the form fields below to create a secure profile.</p>
+        </div>
+        <hr class="divider" />
+        <form id="userForm" onsubmit="saveUser(event)">
+            <input type="hidden" id="userId" />
+
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="firstName">First Name <span class="required">*</span></label>
+                    <input type="text" id="firstName" placeholder="e.g. Juan" required />
+                </div>
+                <div class="input-group">
+                    <label for="middleName">Middle Name</label>
+                    <input type="text" id="middleName" placeholder="e.g. Santos" />
+                </div>
+                <div class="input-group col-span-2">
+                    <label for="lastName">Last Name <span class="required">*</span></label>
+                    <input type="text" id="lastName" placeholder="e.g. Dela Cruz" required />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                <button type="submit" id="submitBtn" class="btn btn-submit">Save Record</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
