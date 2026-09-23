@@ -8,7 +8,6 @@ using System.Net.Http.Headers;
 
 namespace CRUDCoreASP.NET.Services
 {
-    // Ensure UserServices implements IUserServices
     public class UserServices : IUserServices
     {
         #region Private Fields
